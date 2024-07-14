@@ -1,73 +1,62 @@
 <?php
-  // ini_set('display_errors', 1);
-  // ini_set('display_startup_errors', 1);
-  // error_reporting(E_ALL);
+  ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
+  error_reporting(E_ALL);
 
   include("./conexao.php");
-
+  
   $id = "";
   $titulo = "";
   $descricao = "";
   $status_tarefa = "";
 
-  $errorMessage = "";
-  $successMessage = "";
-
-  if($_SERVER['REQUEST_METHOD'] == 'GET'){
-    // Método GET: Mostra os dados da tarefa
-
-    if(!isset($_GET["id"])){
-      header("location: ./index.php");
-      exit;
-    }
-
-    $id = $_GET["id"];
-
-    // exibe a linha da tarefa selecionada na tabela do banco de dados
-    $sql = "SELECT * FROM tarefas WHERE id=?";
-    $stmt = $connection->prepare($sql);
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-
-    if(!$row){
-      header("location: ./index.php");
-      exit;
-    }
-
-    $titulo = $row["titulo"];
-    $descricao = $row["descricao"];
-    $status_tarefa = $row["status_tarefa"];
-
-  }else{
-    // Método POST: Atualiza os dados da tarefa
-
-    $id = $_POST["id"];
+  if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $titulo = $_POST["titulo"];
     $descricao = $_POST["descricao"];
     $status_tarefa = $_POST["status_tarefa"];
 
+    $errorMessage = "";
+    $successMessage = "";
+
     do{
-      if(empty($id) || empty($titulo) || empty($descricao) || empty($status_tarefa)){
+      if(empty($titulo) || empty($descricao)){
         $errorMessage = "Todos os campos são obrigatórios";
         break;
       }
 
-      $sql = "UPDATE tarefas SET titulo = ?, descricao = ?, status_tarefa = ? WHERE id = ?";
-      $stmt = $connection->prepare($sql);
-      $stmt->bind_param("sssi", $titulo, $descricao, $status_tarefa, $id);
+      // verifica se o título já existe
+      $stmt = $connection->prepare("SELECT * FROM tarefas WHERE titulo = ?");
+      $stmt->bind_param("s", $titulo);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      
+      if ($result->num_rows > 0) {
+          $errorMessage = "Já existe uma tarefa com esse nome.";
+          break;
+      }
+      
+      $stmt->close();
 
+      // adiciona uma nova tarefa ao banco de dados
+      $stmt = $connection->prepare("INSERT INTO tarefas (titulo, descricao, status_tarefa) VALUES (?, ?, ?)");
+      $stmt->bind_param("sss", $titulo, $descricao, $status_tarefa);
 
-      if(!$stmt->execute()){
-        $errorMessage = "Consulta inválida: " . $connection->error;
-        break;
+      if ($stmt->execute()) {
+          $successMessage = "Tarefa adicionada corretamente";
+      } else {
+          $errorMessage = "Erro: " . $stmt->error;
       }
 
-      $successMessage = "Cliente atualizado corretamente";
+      $stmt->close();
 
-      header("location: ./index.php");
-      exit;
+      $titulo = "";
+      $descricao = "";
+      $status_tarefa = "";
+
+      if (empty($errorMessage)) {
+        header("location: ./index.php");
+        exit;
+      }
 
     }while(false);
 
@@ -80,11 +69,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <title>My Shop</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>Todo List</title>
   </head>
   <body>
     <div class="container my-5">
-      <h2>Atualizar Tarefa</h2>
+      <h2>Nova Tarefa</h2>
 
       <?php
         if(!empty($errorMessage)){
@@ -98,7 +88,6 @@
       ?>
 
       <form method="post">
-        <input type="hidden" name="id" value="<?php echo $id; ?>">
         <div class="row mb-3">
           <label class="col-sm-3 col-form-label">Título</label>
           <div class="col-sm-6">
@@ -116,8 +105,8 @@
           <label class="col-sm-3 col-form-label">Status</label>
           <div class="col-sm-6">
             <select class="form-control" name="status_tarefa" id="status_tarefa">
-              <option value="pendente" <?php if ($status_tarefa == 'pendente') echo 'selected'; ?>>Pendente</option>
-              <option value="concluida" <?php if ($status_tarefa == 'concluida') echo 'selected'; ?>>Concluída</option>
+              <option value="pendente">Pendente</option>
+              <option value="concluida">Concluída</option>
             </select>
           </div>
         </div>
@@ -139,10 +128,10 @@
 
         <div class="row mb-3">
           <div class="offset-sm-3 col-sm-3 d-grid">
-            <button type="submit" class="btn btn-primary">Atualizar</button>
+            <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Cadastrar</button>
           </div>
           <div class="col-sm-3 d-grid">
-            <a href="./index.php" class="btn btn-outline-primary" role="button">Cancelar</a>
+            <a href="./index.php" class="btn btn-outline-primary" role="button"><i class="bi bi-x-circle"></i> Cancelar</a>
           </div>
         </div>
       </form>

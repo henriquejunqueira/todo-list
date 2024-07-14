@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   </head>
   <body>
     <div class="container my-5">
       <h2>Todo List</h2>
-      <a class="btn btn-primary" href="./cadastrar.php" role="button">Nova Tarefa</a>
+      <a class="btn btn-primary" href="./cadastrar.php" role="button"><i class="bi bi-plus-circle"></i> Nova Tarefa</a>
       <br>
       <table class="table">
         <thead>
@@ -40,8 +41,8 @@
                   <td>$row[descricao]</td>
                   <td>$row[status_tarefa]</td>
                   <td>
-                    <a href='editar.php?id=$row[id]' class='btn btn-primary btn-sm'>Editar</a>
-                    <a href='remover.php?id=$row[id]' class='btn btn-danger btn-sm'>Remover</a>
+                    <a href='editar.php?id=$row[id]' class='btn btn-success btn-sm'><i class='bi bi-pencil-square'></i> Editar</a>
+                    <a href='remover.php?id=$row[id]' class='btn btn-danger btn-sm'><i class='bi bi-trash3'></i> Remover</a>
                   </td>
                 </tr>
               ";

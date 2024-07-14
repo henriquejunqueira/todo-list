@@ -3,16 +3,14 @@
   // ini_set('display_startup_errors', 1);
   // error_reporting(E_ALL);
 
-  $servername = getenv("MYSQLHOST");
-  $username = getenv("MYSQLUSER");
-  $password = getenv("MYSQLPASSWORD");
-  $database = getenv("MYSQLDATABASE");
-  $port = getenv("MYSQLPORT");
+  $servername = "localhost";
+  $username = "henrique";
+  $password = "slipknot1994";
+  $database = "todos";
+  $port = "3306";
 
   // cria a conexão
   $connection = new mysqli($servername, $username, $password, $database, $port);
-  // $conn = "mysql://$username:$password@$servername:$port/$database";
-  // $connection = new mysqli($conn);
 
   // verifica conexão
   if($connection->connect_error){

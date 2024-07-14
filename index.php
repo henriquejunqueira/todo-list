@@ -24,7 +24,7 @@
 
 						include("./conexao.php");
 
-            // read all row from database table
+            // lê todas as linhas da tabela do banco de dados
             $sql = "SELECT * FROM tarefas";
             $result = $connection->query($sql);
 
@@ -32,7 +32,7 @@
               die("Invalid query: " . $connection->error);
             }
 
-            // read data of each row
+            // lê os dados de cada linha
             while($row = $result->fetch_assoc()){
               echo "
                 <tr>

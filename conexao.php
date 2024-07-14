@@ -12,9 +12,10 @@
   $username = "MYSQLUSER";
   $password = "MYSQLPASSWORD";
   $database = "MYSQLDATABASE";
+  $port = "MYSQLPORT";
 
   // cria a conexão
-  $connection = new mysqli($servername, $username, $password, $database);
+  $connection = new mysqli($servername, $username, $password, $database, $port);
 
   // verifica conexão
   if($connection->connect_error){

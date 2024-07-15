@@ -3,11 +3,11 @@
   // ini_set('display_startup_errors', 1);
   // error_reporting(E_ALL);
 
-  $servername = "SERVERNAME";
-  $username = "USERNAME";
-  $password = "PASSWORD";
-  $database = "DATABASE";
-  $port = "PORT";
+  $servername = getenv("SERVERNAME");
+  $username = getenv("USERNAME");
+  $password = getenv("PASSWORD");
+  $database = getenv("DATABASE");
+  $port = getenv("PORT");
 
   // cria a conexão
   $connection = new mysqli($servername, $username, $password, $database, $port);

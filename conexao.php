@@ -1,16 +1,12 @@
 <?php
-  // ini_set('display_errors', 1);
-  // ini_set('display_startup_errors', 1);
-  // error_reporting(E_ALL);
 
-  $servername = getenv("SERVERNAME");
-  $username = getenv("USERNAME");
-  $password = getenv("PASSWORD");
-  $database = getenv("DATABASE");
-  $port = getenv("PORT");
+  $servername = "localhost";
+  $username = "henrique";
+  $password = "slipknot1994";
+  $database = "todos";
 
   // cria a conexão
-  $connection = new mysqli($servername, $username, $password, $database, $port);
+  $connection = new mysqli($servername, $username, $password, $database);
 
   // verifica conexão
   if($connection->connect_error){

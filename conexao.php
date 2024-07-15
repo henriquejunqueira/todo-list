@@ -3,14 +3,6 @@
   // ini_set('display_startup_errors', 1);
   // error_reporting(E_ALL);
 
-  require 'vendor/autoload.php';
-
-  // Carregar variáveis de ambiente (no desenvolvimento local)
-  if (file_exists(__DIR__ . '/.env')) {
-      $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-      $dotenv->load();
-  }
-
   $servername = getenv("SERVERNAME");
   $username = getenv("USERNAME");
   $password = getenv("PASSWORD");
